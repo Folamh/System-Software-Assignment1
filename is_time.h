@@ -1,3 +1,6 @@
+#ifndef IS_TIME_H
+#define IS_TIME_H
+
 #include <stdbool.h>
 #include <time.h>
 
@@ -10,8 +13,11 @@ bool is_time (int hr, int min, int sec) {
     desired_time.tm_sec = sec;
 
     if (difftime(current_time, mktime(&desired_time))) {
+        sleep(3);
         return true;
     } else {
         return false;
     }
 }
+
+#endif //IS_TIME_H

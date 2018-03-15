@@ -1,3 +1,6 @@
+#ifndef DAEMONIZE_H
+#define DAEMONIZE_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -43,9 +46,11 @@ int daemonize() {
 
     // Step 5: Close open file descriptors.
     syslog(LOG_DEBUG, "Step 5: Closing open file descriptors.");
-    for (long i = sysconf(_SC_OPEN_MAX); i >= 0 ; i--)
+    for (int i = (int) sysconf(_SC_OPEN_MAX); i >= 0 ; i--)
         close (i);
 	
     syslog(LOG_INFO, "Daemon successfully created.");
     return 0;
 }
+
+#endif //DAEMONIZE_H
