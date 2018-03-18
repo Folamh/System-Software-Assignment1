@@ -6,6 +6,7 @@
 #include <syslog.h>
 #include <time.h>
 #include <string.h>
+#include <stdio.h>
 
 void change_perm(char folder[], char mode[]) {
     if (chmod(folder, strtol(mode, 0, 8)) < 0) {

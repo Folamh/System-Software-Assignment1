@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <time.h>
+#include <unistd.h>
 
 bool is_time (int hr, int min, int sec) {
     time_t current_time;
