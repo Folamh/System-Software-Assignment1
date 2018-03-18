@@ -14,7 +14,6 @@ bool is_time (int hr, int min, int sec) {
     desired_time.tm_sec = sec;
 
     if (difftime(current_time, mktime(&desired_time))) {
-        sleep(3);
         return true;
     } else {
         return false;
