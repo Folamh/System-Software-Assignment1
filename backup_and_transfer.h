@@ -32,7 +32,7 @@ void backup_and_transfer(char *folder, char *bak_loc, char *trans_loc) {
     system(command);
 
     syslog(LOG_INFO, "Beginning transfer to : %s", trans_loc);
-    snprintf(command, sizeof(command), "rsync -ac %s %s", folder, trans_loc);
+    snprintf(command, sizeof(command), "rsync -c %s/ %s/", folder, trans_loc);
     syslog(LOG_DEBUG, "Transfer command: %s", command);
     system(command);
 
