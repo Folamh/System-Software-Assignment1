@@ -9,7 +9,7 @@ int main() {
 
     // setup of authd
 
-    backup("/home/rmurphy/Projects/playhouse/c/test_folder", "/home/rmurphy/Projects/playhouse/c/test_folder_bak");
+    backup("/var/www/html/intranet", "/home/rmurphy");
 
     while (true) {
         if (is_time(23, 59, 59)) {
