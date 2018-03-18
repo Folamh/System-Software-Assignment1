@@ -5,19 +5,6 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
-#include <sys/msg.h>
-
-void send_msg(char *message) {
-    int msqid = msgget((key_t)56565, 0666 | IPC_CREAT);
-    struct message {
-        long type;
-        char text[120];
-    } msg;
-
-    msg.type = 1;
-    strcpy(msg.text, message);
-    msgsnd(msqid, (void *) &msg, sizeof(msg.text), IPC_NOWAIT);
-}
 
 void setup_auditd(char *folder, char *key) {
     syslog(LOG_INFO, "Watching for write changes: %s", folder);
