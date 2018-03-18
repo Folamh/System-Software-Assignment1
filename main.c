@@ -2,7 +2,6 @@
 #include "is_time.h"
 #include "backup_and_transfer.h"
 #include "auditd.h"
-#include <sys/msg.h>
 
 int main() {
     char intranet[] = "/var/www/html/intranet";
@@ -14,7 +13,7 @@ int main() {
     int msqid = 56565;
     struct message {
         long type;
-        char text[20];
+        char text[120];
     } msg;
     long msgtyp = 0;
 
@@ -47,6 +46,8 @@ int main() {
                 syslog(LOG_DEBUG, "Forking off backup and transfer.");
                 backup_and_transfer(intranet, bak_loc, live);
             }
+        } else {
+            syslog(LOG_INFO, msg.text);
         }
         break;
     }

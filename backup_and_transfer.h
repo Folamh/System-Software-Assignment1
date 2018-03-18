@@ -7,15 +7,29 @@
 #include <time.h>
 #include <string.h>
 #include <stdio.h>
+#include <sys/msg.h>
+
+void send_msg(char *message) {
+    int msqid = 56565;
+    struct message {
+        long type;
+        char text[120];
+    } msg;
+
+    strcpy(msg.text, message);
+    msgsnd(msqid, (void *) &msg, sizeof(msg.text), IPC_NOWAIT);
+}
 
 void change_perm(char folder[], char mode[]) {
     if (chmod(folder, (__mode_t) strtol(mode, 0, 8)) < 0) {
         syslog(LOG_ERR, "Error while changing file permissions.");
+        send_msg("FAILURE: Failed to change permissions during backup and transfer.");
         exit(EXIT_FAILURE);
     }
 }
 
 void backup_and_transfer(char *folder, char *bak_loc, char *trans_loc) {
+
     char filename[40];
     struct tm *timenow;
     time_t now = time(NULL);
@@ -39,6 +53,7 @@ void backup_and_transfer(char *folder, char *bak_loc, char *trans_loc) {
     syslog(LOG_INFO, "Unlocking folder.");
     change_perm(folder, "0777");
 
+    send_msg("SUCCESS: Backup and transfer successfully completed");
     exit(EXIT_SUCCESS);
 }
 

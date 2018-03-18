@@ -21,6 +21,9 @@ void file_report(char *folder, char *key) {
     snprintf(command, sizeof(command), "ausearch -ts today -k %s | aureport -f -i >> %s/%s", key, folder, filename);
     syslog(LOG_DEBUG, "Report creation command: %s", command);
     system(command);
+
+    send_msg("SUCCESS: Report successfully created.");
+    exit(EXIT_SUCCESS);
 }
 
 #endif //AUDITD_H
