@@ -11,7 +11,11 @@ void setup_auditd(char *folder, char *key) {
     char command[300];
     snprintf(command, sizeof(command), "auditctl -w %s -p w -k %s", folder, key);
     syslog(LOG_DEBUG, "Audit command: %s", command);
-    system(command);
+    if (system(command) != 0) {
+        syslog(LOG_ERR, "Failed to run command.");
+        send_msg("FAILURE: Failed to build auditor.");
+        exit(EXIT_FAILURE);
+    }
 }
 
 void file_report(char *folder, char *key) {
@@ -25,7 +29,11 @@ void file_report(char *folder, char *key) {
     char command[300];
     snprintf(command, sizeof(command), "ausearch -ts today -k %s | aureport -f -i >> %s/%s", key, folder, filename);
     syslog(LOG_DEBUG, "Report creation command: %s", command);
-    system(command);
+    if (system(command) != 0) {
+        syslog(LOG_ERR, "Failed to run command.");
+        send_msg("FAILURE: Failed to build report.");
+        exit(EXIT_FAILURE);
+    }
 
     send_msg("SUCCESS: Report successfully created.");
     exit(EXIT_SUCCESS);
