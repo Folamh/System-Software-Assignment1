@@ -10,7 +10,7 @@ int main() {
     char report_loc[] = "/var/reports";
     char key[] = "SystemSoftware-Assignment1";
 
-    int msqid = 56565;
+    int msqid = msgget((key_t)56565, 0666 | IPC_CREAT);
     struct message {
         long type;
         char text[120];
@@ -41,6 +41,7 @@ int main() {
         }
         msgrcv(msqid, (void *) &msg, sizeof(msg.text), msgtyp, MSG_NOERROR | IPC_NOWAIT);
         if (strcmp(msg.text, "BACKUP") == 0) {
+            syslog(LOG_INFO, "Forcing backup and transfer.");
             int pid = fork();
             if (pid == 0) {
                 syslog(LOG_DEBUG, "Forking off backup and transfer.");

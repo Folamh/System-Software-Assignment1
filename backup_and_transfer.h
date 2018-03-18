@@ -10,7 +10,7 @@
 #include <sys/msg.h>
 
 void send_msg(char *message) {
-    int msqid = 56565;
+    int msqid = msgget((key_t)56565, 0666 | IPC_CREAT);
     struct message {
         long type;
         char text[120];
