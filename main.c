@@ -56,7 +56,6 @@ int main() {
                 syslog(LOG_INFO, msg.text);
             }
         }
-        break;
     }
     closelog();
     return 0;
