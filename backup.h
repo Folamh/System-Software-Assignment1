@@ -14,9 +14,6 @@ void change_perm(char folder[], char mode[]) {
 }
 
 void backup(char folder[100], char bak_loc[100]) {
-    syslog(LOG_INFO, "Locking down folder for backup.");
-    change_perm(folder, "0444");
-
     char filename[40];
     struct tm *timenow;
 
@@ -32,7 +29,10 @@ void backup(char folder[100], char bak_loc[100]) {
     strcat(command, " ");
     strcat(command, folder);
     syslog(LOG_INFO, "%s", command);
-    
+
+    syslog(LOG_INFO, "Locking down folder for backup.");
+    change_perm(folder, "0444");
+
     syslog(LOG_INFO, "Unlocking folder.");
     change_perm(folder, "0777");
 }
