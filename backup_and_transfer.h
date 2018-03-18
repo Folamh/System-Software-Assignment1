@@ -16,6 +16,7 @@ void send_msg(char *message) {
         char text[120];
     } msg;
 
+    msg.type = 1;
     strcpy(msg.text, message);
     msgsnd(msqid, (void *) &msg, sizeof(msg.text), IPC_NOWAIT);
 }
