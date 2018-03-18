@@ -33,7 +33,7 @@ void backup(char folder[100], char bak_loc[160]) {
     change_perm(folder, "0444");
 
     syslog(LOG_INFO, "Creating backup: %s", filename);
-
+    system(command);
 
     syslog(LOG_INFO, "Unlocking folder.");
     change_perm(folder, "0777");
