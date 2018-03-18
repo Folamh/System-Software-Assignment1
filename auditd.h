@@ -1,6 +1,11 @@
 #ifndef AUDITD_H
 #define AUDITD_H
 
+#include <syslog.h>
+#include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
+
 void setup_auditd(char *folder, char *key) {
     syslog(LOG_INFO, "Watching for write changes: %s", folder);
     char command[300];
