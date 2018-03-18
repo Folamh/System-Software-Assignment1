@@ -23,11 +23,7 @@ void backup(char folder[100], char bak_loc[160]) {
 
     strftime(filename, sizeof(filename), "backup_%Y-%m-%d_%H:%M:%S.tar", timenow);
 
-    char command[300] = "tar czf";
-//    strcat(command, bak_loc);
-//    strcat(command, filename);
-//    strcat(command, " ");
-//    strcat(command, folder);
+    char command[300] = "tar Pczf";
     snprintf(command, sizeof(command), " %s/%s %s", bak_loc, filename, folder);
     syslog(LOG_DEBUG, "Backup command: %s", command);
 
