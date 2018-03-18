@@ -24,11 +24,11 @@ void backup(char folder[100], char bak_loc[100]) {
     syslog(LOG_INFO, "Creating backup: %s", filename);
 
     strcat(bak_loc, filename);
-    char command[180] = "tar czf ";
+    char command[250] = "tar czf ";
     strcat(command, bak_loc);
     strcat(command, " ");
     strcat(command, folder);
-    syslog(LOG_INFO, "%s", command);
+    syslog(LOG_INFO, "Backup command: %s", command);
 
     syslog(LOG_INFO, "Locking down folder for backup.");
     change_perm(folder, "0444");
