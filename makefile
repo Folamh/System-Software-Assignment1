@@ -1,4 +1,4 @@
-all: System_Software_Assignment1 Force_Backup
+all: System-Software-Assignment1 Force-Backup
 
 System_Software_Assignment1: main.c
 	gcc -o System_Software_Assignment1 main.c auditd.h backup_and_transfer.h daemonize.h is_time.h
