@@ -1,42 +1,52 @@
 #include "daemonize.h"
 #include "is_time.h"
 #include "backup_and_transfer.h"
-
-void setup_auditd(char *folder, char *key) {
-    char command[300];
-    snprintf(command, sizeof(command), "auditctl -w %s -p w -k %s", folder, key);
-    system(command);
-}
-
-void file_report(char *folder, char *key) {
-    char filename[40];
-    struct tm *timenow;
-    time_t now = time(NULL);
-    timenow = gmtime(&now);
-    strftime(filename, sizeof(filename), "report_%Y-%m-%d.txt", timenow);
-
-    char command[300];
-    snprintf(command, sizeof(command), "ausearch -ts today -k %s | aureport -f -i >> %s", key, filename);
-    system(command);
-}
+#include "auditd.h"
+#include <sys/msg.h>
 
 int main() {
-    char intranet[100] = "/var/www/html/intranet";
-    char live[100] = "/var/www/html/live";
-    char bak_loc[100] = "/var/backups";
+    char intranet[] = "/var/www/html/intranet";
+    char live[] = "/var/www/html/live";
+    char bak_loc[] = "/var/backups";
     char report_loc[] = "/var/reports";
-    char audit_key[] = "SystemSoftware-Assignment";
-    openlog("Assignment1-Log", LOG_PID|LOG_CONS, LOG_DAEMON);
+    char key[] = "SystemSoftware-Assignment1";
+
+    int msqid = 56565;
+    struct message {
+        long type;
+        char text[20];
+    } msg;
+    long msgtyp = 0;
+
+    openlog(key, LOG_PID|LOG_CONS, LOG_DAEMON);
+
     daemonize();
 
-    setup_auditd(intranet, audit_key);
+    setup_auditd(intranet, key);
 
     while (true) {
         if (is_time(23, 59, 59)) {
-            backup_and_transfer(intranet, bak_loc, live);
-            file_report(report_loc, audit_key);
+            syslog(LOG_INFO, "Beginning end of day routine.");
+            int pid = fork();
+            if (pid == 0) {
+                syslog(LOG_DEBUG, "Forking off backup and transfer.");
+                backup_and_transfer(intranet, bak_loc, live);
+            }
 
+            pid = fork();
+            if (pid == 0) {
+                syslog(LOG_DEBUG, "Forking off report file creation.");
+                file_report(report_loc, key);
+            }
             sleep(1);
+        }
+        msgrcv(msqid, (void *) &msg, sizeof(msg.text), msgtyp, MSG_NOERROR | IPC_NOWAIT);
+        if (strcmp(msg.text, "BACKUP") == 0) {
+            int pid = fork();
+            if (pid == 0) {
+                syslog(LOG_DEBUG, "Forking off backup and transfer.");
+                backup_and_transfer(intranet, bak_loc, live);
+            }
         }
         break;
     }

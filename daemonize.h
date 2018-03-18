@@ -7,7 +7,7 @@
 #include <sys/stat.h>
 #include <syslog.h>
 
-int daemonize() {
+void daemonize() {
     syslog(LOG_INFO, "Daemonizing program.");
     // Step 1: Create orphan process.
     syslog(LOG_DEBUG, "Step 1: Creating orphan process.");
@@ -50,7 +50,6 @@ int daemonize() {
         close (i);
 	
     syslog(LOG_INFO, "Daemon successfully created.");
-    return 0;
 }
 
 #endif //DAEMONIZE_H

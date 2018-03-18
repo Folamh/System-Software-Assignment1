@@ -11,6 +11,7 @@
 void change_perm(char folder[], char mode[]) {
     if (chmod(folder, (__mode_t) strtol(mode, 0, 8)) < 0) {
         syslog(LOG_ERR, "Error while changing file permissions.");
+        exit(EXIT_FAILURE);
     }
 }
 
@@ -27,17 +28,18 @@ void backup_and_transfer(char *folder, char *bak_loc, char *trans_loc) {
     char command[300];
     snprintf(command, sizeof(command), "tar Pczf %s/%s %s", bak_loc, filename, folder);
     syslog(LOG_DEBUG, "Backup command: %s", command);
-
     syslog(LOG_INFO, "Creating backup: %s", filename);
     system(command);
 
-    syslog(LOG_INFO, "Beginning transfer to : %s", trans_loc);
+    syslog(LOG_INFO, "Beginning transfer to: %s", trans_loc);
     snprintf(command, sizeof(command), "rsync -cr %s/ %s/ --delete-after", folder, trans_loc);
     syslog(LOG_DEBUG, "Transfer command: %s", command);
     system(command);
 
     syslog(LOG_INFO, "Unlocking folder.");
     change_perm(folder, "0777");
+
+    exit(EXIT_SUCCESS);
 }
 
 #endif //BACKUP_TRANSFER_H
