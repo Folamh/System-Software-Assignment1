@@ -48,7 +48,7 @@ int main() {
                 backup_and_transfer(intranet, bak_loc, live);
             }
         } else {
-            syslog(LOG_INFO, msg.text);
+            //syslog(LOG_INFO, msg.text);
         }
         break;
     }

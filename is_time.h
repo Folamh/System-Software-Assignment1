@@ -14,7 +14,7 @@ bool is_time (int hr, int min, int sec) {
     desired_time.tm_min = min;
     desired_time.tm_sec = sec;
 
-    if (difftime(current_time, mktime(&desired_time))) {
+    if (difftime(current_time, mktime(&desired_time)) == 0) {
         syslog(LOG_DEBUG, "It is time.");
         return true;
     } else {
