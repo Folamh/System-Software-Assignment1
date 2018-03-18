@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <time.h>
 #include <unistd.h>
+#include <syslog.h>
 
 bool is_time (int hr, int min, int sec) {
     time_t current_time;
